@@ -1,0 +1,51 @@
+serve:
+  addr: ":8080" #运行的端口
+  readTimeout: 5s #读超时
+  writeTimeout: 5s #写超时
+  defaultTimeout: 30s #优雅退出时的默认时间
+mysql:
+  user: "root"
+  password: "zxz123456"
+  host: "127.0.0.1"
+  port: 3306
+  dbname: "mall"
+redis:
+  addr: "127.0.0.1:6379"
+  password: "123456"
+  poolSize: 20
+SMTPInfo:
+  host: "smtp.qq.com"
+  port: 465
+  userName: "1197285120@qq.com"
+  password: "***" #密码
+  isSSL: true
+  from: "1197285120@qq.com" #发件人
+  to: #接收人
+    - "1197285120@qq.com"
+Log: # 日志配置文件
+  Level: debug
+  LogSavePath: "storage/Applogs/" # 日志保存路径
+  HighLevelFile: error          # 高级别日志文件名
+  LowLevelFile: info          # 低级别文件名
+  LogFileExt: .log          # 日志文件后缀
+  MaxSize: 10 # 日志文件最大大小
+  MaxAge: 30 # 日志文件最大保存天数
+  MaxBackups: 7 # 最大备份数
+  Compress: false # 是否压缩
+Captcha:
+  width: 80 #宽度
+  height: 240 #高度
+  length: 5
+  maxSkew: 0.7
+  dotCount: 80
+  expired: 30 #过期时间
+Worker: # 工作池配置
+  TaskChanCapacity: 50 # 任务队列容量
+  WorkerChanCapacity: 50 # 工作队列容量
+  WorkerNum: 10 # 工作池数量
+Token:
+  Key: "wJZ8a507mbp3HZiJzUL0aUBo3WDlvmbp"
+  AccessTokenExpire: 15m
+  RefreshTokenExpire: 24h
+  AuthType: "x-token"
+  AuthKey: "Claims"
