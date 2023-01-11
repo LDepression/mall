@@ -45,7 +45,17 @@ Worker: # 工作池配置
   WorkerNum: 10 # 工作池数量
 Token:
   Key: "wJZ8a507mbp3HZiJzUL0aUBo3WDlvmbp"
-  AccessTokenExpire: 15m
-  RefreshTokenExpire: 24h
+  AccessTokenExpire: 15h
+  RefreshTokenExpire: 20h
   AuthType: "x-token"
   AuthKey: "Claims"
+OSS:
+  Endpoint: "http://oss-cn-hangzhou.aliyuncs.com"
+  AccessKeyId: "***"
+  AccessKeySecret: "***"
+  BucketName: "lycmall2"
+  BasePath: "mall"
+  BucketUrl: "http://lycmall2.oss-cn-hangzhou.aliyuncs.com"
+Auto:
+  SendEmailTime: 60s
+  CodeValidTime: 1h

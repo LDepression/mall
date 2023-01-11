@@ -17,7 +17,7 @@ SMTPInfo:
   host: "smtp.qq.com"
   port: 465
   userName: "1197285120@qq.com"
-  password: "zibwqaowvgongjca" #密码
+  password: "***" #密码
   isSSL: true
   from: "1197285120@qq.com" #发件人
   to: #接收人

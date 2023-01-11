@@ -4,6 +4,7 @@ go 1.17
 
 require (
 	github.com/0RAJA/Rutils v1.3.9
+	github.com/aliyun/aliyun-oss-go-sdk v2.2.4+incompatible
 	github.com/anaskhan96/go-password-encoder v0.0.0-20201010210601-c765b799fd72
 	github.com/gin-gonic/gin v1.8.2
 	github.com/go-playground/locales v0.14.0
@@ -62,6 +63,7 @@ require (
 	golang.org/x/net v0.4.0 // indirect
 	golang.org/x/sys v0.3.0 // indirect
 	golang.org/x/text v0.5.0 // indirect
+	golang.org/x/time v0.0.0-20220609170525-579cf78fd858 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect

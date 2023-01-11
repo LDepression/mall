@@ -64,7 +64,7 @@ func CheckEmailExist(email string) error {
 }
 func (s *SendEmailCode) Task() func() {
 	return func() {
-		mask.RWMutex.RLock()
+		mask.RWMutex.Lock()
 		_, ok := mask.m[s.Email]
 		if ok {
 			mask.RWMutex.RUnlock()
@@ -72,7 +72,7 @@ func (s *SendEmailCode) Task() func() {
 			return
 		}
 		mask.m[s.Email] = struct{}{}
-		mask.RWMutex.RUnlock()
+		mask.RWMutex.Unlock()
 		SendInfo := email.NewEmail(&email.SMTPInfo{
 			Host:     global.Setting.SMTPInfo.Host,
 			Port:     global.Setting.SMTPInfo.Port,
@@ -100,12 +100,12 @@ func (s *SendEmailCode) Task() func() {
 }
 
 func (s *SendEmailCode) AfterDelete() {
-	time.AfterFunc(time.Second*340, func() {
+	time.AfterFunc(global.Setting.Auto.SendEmailTime, func() {
 		mask.RWMutex.RLock()
 		delete(mask.m, s.Email)
 		mask.RWMutex.Unlock()
 	})
-	time.AfterFunc(time.Second*340, func() {
+	time.AfterFunc(global.Setting.Auto.CodeValidTime, func() {
 		bind.RWMutex.RLock()
 		delete(bind.m, s.Email)
 		bind.RWMutex.Unlock()
@@ -120,6 +120,7 @@ func Check(code, email string) bool {
 	bind.RLock()
 	defer bind.RUnlock()
 	if bind.m[email] == code {
+		delete(bind.m, email)
 		return true
 	} else {
 		return false

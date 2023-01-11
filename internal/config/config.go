@@ -11,6 +11,8 @@ type All struct {
 	Captcha  Captcha  `mapstructure:"Captcha"`
 	Worker   Worker   `mapstructure:"Worker"`
 	Token    Token    `mapstructure:"Token"`
+	OSS      OSS      `mapstructure:"OSS"`
+	Auto     Auto     `mapstructure:"Auto"`
 }
 type Serve struct {
 	Addr           string        `mapstructure:"addr" json:"addr"`
@@ -76,4 +78,20 @@ type Token struct {
 	RefreshTokenExpire time.Duration `mapstructure:"RefreshTokenExpire"`
 	AuthType           string        `mapstructure:"AuthType"`
 	AuthKey            string        `mapstructure:"AuthKey"`
+}
+
+type OSS struct {
+	BucketName      string `mapstructure:"BucketName"`
+	ObjectName      string `mapstructure:"ObjectName"`
+	LocalFileName   string `mapstructure:"LocalFileName"`
+	Endpoint        string `mapstructure:"Endpoint"`
+	AccessKeyId     string `mapstructure:"AccessKeyId"`
+	AccessKeySecret string `mapstructure:"AccessKeySecret"`
+	BasePath        string `mapstructure:"BasePath"`
+	BucketUrl       string `mapstructure:"BucketUrl"`
+}
+
+type Auto struct {
+	SendEmailTime time.Duration `mapstructure:"SendEmailTime"`
+	CodeValidTime time.Duration `mapstructure:"CodeValidTime"`
 }

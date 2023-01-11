@@ -32,7 +32,7 @@ func main() {
 	//注册验证器
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		_ = v.RegisterValidation("mobile", common.ValidateMobile) //这里的mobile和from表单里的是一样的
-		_ = v.RegisterValidation("email", common.ValidateEmail)   //这里的mobile和from表单里的是一样的
+		_ = v.RegisterValidation("email", common.ValidateEmail)   //这里的email和from表单里的是一样的
 		//翻译错误
 		_ = v.RegisterTranslation("mobile", global.Trans, func(ut ut.Translator) error {
 			return ut.Add("mobile", "非法的手机号码", true)

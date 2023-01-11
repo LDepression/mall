@@ -17,5 +17,6 @@ func NewRouter() *gin.Engine {
 	routering.Group.User.Init(root)
 	routering.Group.Base.Init(root)
 	routering.Group.Email.Init(root)
+	routering.Group.Upload.Init(root)
 	return r
 }
