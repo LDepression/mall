@@ -59,3 +59,6 @@ OSS:
 Auto:
   SendEmailTime: 60s
   CodeValidTime: 1h
+EsInfo:
+  Host: "192.168.28.100"
+  Port: 9200

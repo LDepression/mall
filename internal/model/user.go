@@ -1,18 +1,5 @@
 package model
 
-import (
-	"gorm.io/gorm"
-	"time"
-)
-
-type BaseModel struct {
-	ID        int32          `gorm:"primaryKey"`
-	CreatedAt time.Time      `gorm:"column:add_time"`
-	UpdatedAt time.Time      `gorm:"column:update_time"`
-	DeletedAt gorm.DeletedAt `gorm:"column:delete_time"`
-	IsDelete  bool           `gorm:"column:is_delete"`
-}
-
 type User struct {
 	BaseModel
 	Mobile   string `gorm:"type:varchar(100);not null;index:idx_mobile;unique"`

@@ -5,6 +5,7 @@ type group struct {
 	Base   abase
 	Email  email
 	Upload upload
+	Good   good
 }
 
 var Group = new(group)

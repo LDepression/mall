@@ -2,10 +2,11 @@ package setting
 
 type group struct {
 	Dao       mdao
-	Log       log
+	Log       elog
 	Validator va
 	Work      worker
 	Maker     maker
+	Es        es
 }
 
 var Group = new(group)
@@ -16,4 +17,5 @@ func InitAll() {
 	Group.Validator.InitTrans("zh")
 	Group.Work.Init()
 	Group.Maker.Init()
+	Group.Es.InitEs()
 }

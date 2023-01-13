@@ -6,9 +6,9 @@ import (
 	"mall/internal/pkg/logger"
 )
 
-type log struct{}
+type elog struct{}
 
-func (log) Init() {
+func (elog) Init() {
 	//初始化
 	//logger, _ := zap.NewDevelopment()
 

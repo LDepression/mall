@@ -29,12 +29,12 @@ func Init() *gorm.DB {
 	DB, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		Logger: newLogger,
 		NamingStrategy: schema.NamingStrategy{
-			SingularTable: true,
+			SingularTable: false,
 		},
 	})
 	if err != nil {
 		panic(err)
 	}
-	DB.AutoMigrate(&model.User{})
+	DB.AutoMigrate(&model.User{}, &model.Good{}, &model.Category{}, &model.Brand{}, &model.GoodsCategoryBrand{})
 	return DB
 }

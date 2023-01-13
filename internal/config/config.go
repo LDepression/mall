@@ -13,6 +13,7 @@ type All struct {
 	Token    Token    `mapstructure:"Token"`
 	OSS      OSS      `mapstructure:"OSS"`
 	Auto     Auto     `mapstructure:"Auto"`
+	EsInfo   EsInfo   `mapstructure:"EsInfo"`
 }
 type Serve struct {
 	Addr           string        `mapstructure:"addr" json:"addr"`
@@ -94,4 +95,9 @@ type OSS struct {
 type Auto struct {
 	SendEmailTime time.Duration `mapstructure:"SendEmailTime"`
 	CodeValidTime time.Duration `mapstructure:"CodeValidTime"`
+}
+
+type EsInfo struct {
+	Host string `mapstructure:"Host"`
+	Port int    `mapstructure:"Port"`
 }

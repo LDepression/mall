@@ -5,7 +5,7 @@ import (
 	"go.uber.org/zap"
 	"mall/internal/dao/db/query"
 	"mall/internal/global"
-	"mall/internal/model/common"
+	"mall/internal/model"
 	"mall/internal/pkg/app"
 	"mall/internal/pkg/app/errcode"
 )
@@ -32,7 +32,7 @@ func Auth() gin.HandlerFunc {
 			ctx.Abort()
 			return
 		}
-		ctx.Set(global.Setting.Token.AuthKey, common.PalLoad{
+		ctx.Set(global.Setting.Token.AuthKey, model.PalLoad{
 			Role:    userInfo.Role,
 			PalLoad: *payLoad,
 		})
@@ -40,12 +40,12 @@ func Auth() gin.HandlerFunc {
 	}
 }
 
-func GetPayload(ctx *gin.Context) (common.PalLoad, errcode.Err) {
+func GetPayload(ctx *gin.Context) (model.PalLoad, errcode.Err) {
 	payload, ok := ctx.Get(global.Setting.Token.AuthKey)
 	if !ok {
-		return payload.(common.PalLoad), errcode.ErrNotLogin
+		return payload.(model.PalLoad), errcode.ErrNotLogin
 	}
-	return payload.(common.PalLoad), nil
+	return payload.(model.PalLoad), nil
 }
 
 func ManagerAuth() gin.HandlerFunc {
