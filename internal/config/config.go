@@ -31,9 +31,10 @@ type Mysql struct {
 }
 
 type Redis struct {
-	Addr     string `json:"addr" mapstructure:"addr"`
-	Password string `json:"password" mapstructure:"password"`
-	PoolSize int    `json:"poolSize" mapstructure:"poolSize"`
+	Addr      string        `json:"addr" mapstructure:"addr"`
+	Password  string        `json:"password" mapstructure:"password"`
+	PoolSize  int           `json:"poolSize" mapstructure:"poolSize"`
+	CacheTime time.Duration `json:"cacheTime" mapstructure:"CacheTime"`
 }
 
 type SMTPInfo struct {

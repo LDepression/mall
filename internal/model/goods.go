@@ -1,6 +1,13 @@
 package model
 
-type GormList []string
+import (
+	"context"
+	"gorm.io/gorm"
+	"gorm.io/gorm/utils"
+	"mall/internal/global"
+	"strconv"
+)
+
 type Category struct {
 	BaseModel
 	Name             string      `gorm:"type:varchar(20);not null" json:"name"`
@@ -49,4 +56,70 @@ type Good struct {
 	Images          GormList `gorm:"type:varchar(1000);not null"`
 	DescImages      GormList `gorm:"type:varchar(1000);not null"`
 	GoodsFrontImage string   `gorm:"type:varchar(200);not null"`
+}
+
+//func (g *Good) BeforeCreate(tx *gorm.DB) (err error) {
+//	u.UUID = uuid.New()
+//
+//	if !u.IsValid() {
+//		err = errors.New("can't save invalid data")
+//	}
+//	return
+//}
+
+func (g *Good) AfterCreate(tx *gorm.DB) (err error) {
+	esModel := EsGoods{
+		ID:          g.ID,
+		CategoryID:  g.CategoryID,
+		BrandsID:    g.BrandID,
+		OnSale:      g.OnSale,
+		ShipFree:    g.ShipFree,
+		IsNew:       g.IsNew,
+		IsHot:       g.IsHot,
+		Name:        g.Name,
+		ClickNum:    g.ClickNum,
+		SoldNum:     g.SoldNum,
+		FavNum:      g.FavNum,
+		MarketPrice: g.MarketPrice,
+		GoodsBrief:  g.GoodsBrief,
+		ShopPrice:   g.ShopPrice,
+	}
+	_, err = global.EsClient.Index().Index(EsGoods{}.IndexName()).BodyJson(esModel).Id(utils.ToString(g.ID)).Do(context.Background())
+	if err != nil {
+		return err
+	}
+	return nil
+}
+func (g *Good) AfterDelete(tx *gorm.DB) (err error) {
+	_, err = global.EsClient.Delete().Index(EsGoods{}.IndexName()).Id(strconv.Itoa(int(g.ID))).Do(context.Background())
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (g *Good) AfterUpdate(tx *gorm.DB) (err error) {
+	esModel := EsGoods{
+		ID:          g.ID,
+		CategoryID:  g.CategoryID,
+		BrandsID:    g.BrandID,
+		OnSale:      g.OnSale,
+		ShipFree:    g.ShipFree,
+		IsNew:       g.IsNew,
+		IsHot:       g.IsHot,
+		Name:        g.Name,
+		ClickNum:    g.ClickNum,
+		SoldNum:     g.SoldNum,
+		FavNum:      g.FavNum,
+		MarketPrice: g.MarketPrice,
+		GoodsBrief:  g.GoodsBrief,
+		ShopPrice:   g.ShopPrice,
+	}
+
+	_, err = global.EsClient.Update().Index(esModel.IndexName()).
+		Doc(esModel).Id(strconv.Itoa(int(g.ID))).Do(context.Background())
+	if err != nil {
+		return err
+	}
+	return nil
 }

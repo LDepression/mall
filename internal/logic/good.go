@@ -3,9 +3,13 @@ package logic
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis/v8"
 	"github.com/olivere/elastic/v7"
 	"go.uber.org/zap"
+	"gorm.io/gorm/utils"
 	"mall/internal/dao"
 	"mall/internal/dao/db/query"
 	"mall/internal/form"
@@ -13,17 +17,18 @@ import (
 	"mall/internal/model"
 	"mall/internal/model/reply"
 	"mall/internal/pkg/app/errcode"
+	"sync"
 )
 
 func Model2Response(good model.Good) reply.RepGoodInfo {
 	return reply.RepGoodInfo{
 		ID: good.ID,
 		Category: reply.ReqCategoryInfo{
-			ID:   good.Category.ID,
+			ID:   good.CategoryID,
 			Name: good.Category.Name,
 		},
 		Brand: reply.ReqBrandInfo{
-			ID:   good.Brand.ID,
+			ID:   good.BrandID,
 			Name: good.Brand.Name,
 			Logo: good.Brand.Logo,
 		},
@@ -45,14 +50,31 @@ func Model2Response(good model.Good) reply.RepGoodInfo {
 	}
 }
 
-func Req2Model(req form.CreateGoodReq) {
-
+func Req2Model(req form.CreateGoodReq, category model.Category, brand model.Brand) model.Good {
+	return model.Good{
+		Category:        category,
+		CategoryID:      req.CategoryId,
+		BrandID:         req.Brand,
+		Brand:           brand,
+		ShipFree:        *req.ShipFree,
+		Name:            req.Name,
+		GoodsSn:         req.GoodsSn,
+		MarketPrice:     req.MarketPrice,
+		ShopPrice:       req.ShopPrice,
+		GoodsBrief:      req.GoodsBrief,
+		Images:          req.Images,
+		DescImages:      req.DescImages,
+		GoodsFrontImage: req.FrontImage,
+		IsNew:           req.IsNew,
+		IsHot:           req.IsHot,
+	}
 }
 
 type good struct {
+	Lock *sync.Mutex
 }
 
-func (good) GetGoodsList(req form.GoodsFilterRequest) (reply.RepGoodsInfo, errcode.Err) {
+func (g *good) GetGoodsList(req form.GoodsFilterRequest) (reply.RepGoodsInfo, errcode.Err) {
 	//我们使用es进行查询
 	/*
 		mysql作为存储,es进行查询
@@ -148,16 +170,134 @@ func (good) GetGoodsList(req form.GoodsFilterRequest) (reply.RepGoodsInfo, errco
 	return ReplyGoodInfo, nil
 }
 
-//func (good) CreateGood(req form.CreateGoodReq) (reply.RepGoodsInfo, errcode.Err) {
-//	var replyGoodsInfo reply.RepGoodsInfo
-//	Qgood := query.NewGood()
-//	var good model.Good
-//	good.Name = req.Name
-//	goodInfo, err := Qgood.GetGoodByName(good)
-//	if err == nil {
-//		//此时说明商品已经存在了
-//		return replyGoodsInfo, errcode.ErrGoodExsit
-//	}
-//
-//	Qgood.CreateGood()
-//}
+func (g *good) CreateGood(ctx *gin.Context, req form.CreateGoodReq) (*reply.RepGoodInfo, errcode.Err) {
+	var category model.Category
+	if result := dao.Group.DB.First(&category, req.CategoryId); result.RowsAffected == 0 {
+		return nil, errcode.ErrServer.WithDetails("分类不存在")
+	}
+	var brand model.Brand
+	if result := dao.Group.DB.First(&brand, req.Brand); result.RowsAffected == 0 {
+		return nil, errcode.ErrServer.WithDetails("商品的品牌不存在")
+	}
+	Qgood := query.NewGood()
+	good := Req2Model(req, category, brand)
+	exist, _ := Qgood.CheckGoodByName(good)
+	if exist {
+		return nil, errcode.ErrGoodExsit
+	}
+	//创建商品
+	tx := Qgood.Begin()
+	//_, err := Qgood.CreateGood(good)
+	result := tx.Save(&good)
+	if result.Error != nil {
+		tx.Rollback()
+		return nil, errcode.ErrServer
+	}
+	tx.Commit()
+	res := Model2Response(good)
+	//这里设置进redis缓存中去
+	err1 := dao.Group.Redis.SetGood(ctx, res)
+	if err1 != nil {
+		return nil, errcode.ErrServer.WithDetails(err1.Error())
+	}
+	return &res, nil
+}
+
+func (g *good) DeleteGood(ctx *gin.Context, id int32) errcode.Err {
+	Qgood := query.NewGood()
+	if exsit := Qgood.CheckGoodByID(id); !exsit {
+		return errcode.ErrNotFound
+	}
+	tx := Qgood.Begin()
+	result := tx.Delete(&model.Good{BaseModel: model.BaseModel{ID: id}})
+	if result.Error != nil {
+		tx.Rollback()
+		return errcode.ErrServer.WithDetails(result.Error.Error())
+	}
+	tx.Commit()
+	g.Lock.Lock()
+	defer g.Lock.Unlock()
+	err1 := dao.Group.Redis.Del(ctx, utils.ToString(id))
+	if err1 != nil {
+		return errcode.ErrServer.WithDetails(err1.Error())
+	}
+	return nil
+}
+
+func (g *good) UpdateGood(ctx *gin.Context, updateGood form.UpdateGood) (*reply.RepGoodInfo, errcode.Err) {
+	//保证一致性
+	g.Lock.Lock()
+	defer g.Lock.Unlock()
+	var category model.Category
+	if result := dao.Group.DB.First(&category, updateGood.CategoryId); result.RowsAffected == 0 {
+		return nil, errcode.ErrServer.WithDetails("分类不存在")
+	}
+	var brand model.Brand
+	if result := dao.Group.DB.First(&brand, updateGood.Brand); result.RowsAffected == 0 {
+		return nil, errcode.ErrServer.WithDetails("商品的品牌不存在")
+	}
+
+	var replyGood reply.RepGoodInfo
+	var good model.Good
+	Qgood := query.NewGood()
+	if exsit := Qgood.CheckGoodByID(updateGood.ID); !exsit {
+		return nil, errcode.ErrNotFound
+	}
+	good.ID = updateGood.ID
+	good.Name = updateGood.Name
+	good.GoodsSn = updateGood.GoodsSn
+	good.GoodsBrief = updateGood.GoodsBrief
+	good.GoodsFrontImage = updateGood.FrontImage
+	good.BrandID = updateGood.Brand
+	good.CategoryID = updateGood.CategoryId
+	good.MarketPrice = updateGood.MarketPrice
+	good.ShopPrice = updateGood.ShopPrice
+	good.IsHot = updateGood.IsHot
+	good.IsNew = updateGood.IsNew
+	good.Category = category
+	good.Brand = brand
+	replyGood = Model2Response(good)
+	tx := dao.Group.DB.Begin()
+	result := tx.Updates(&good)
+	if result.Error != nil {
+		tx.Rollback()
+		return nil, errcode.ErrServer.WithDetails(result.Error.Error())
+	}
+	tx.Commit()
+	if err := dao.Group.Redis.SetGood(ctx, replyGood); err != nil {
+		return nil, errcode.ErrServer.WithDetails(err.Error())
+	}
+	return &replyGood, nil
+}
+
+func (g *good) GetGoodByID(ctx *gin.Context, id int32) (*reply.RepGoodInfo, errcode.Err) {
+	replyInfo, err := dao.Group.Redis.GetGood(ctx, int64(id))
+	if err != nil {
+		if !errors.Is(err, redis.Nil) {
+			zap.S().Error("redis 内部错误....")
+		}
+	} else {
+		return &replyInfo, nil
+	}
+	Qgood := query.NewGood()
+	goodInfo, err := Qgood.GetGoodByID(id)
+	if err != nil {
+		return nil, errcode.ErrServer.WithDetails(err.Error())
+	}
+	reply1 := Model2Response(*goodInfo)
+	return &reply1, nil
+}
+
+func (g *good) BatchGetGoods(ids []int) ([]reply.RepGoodInfo, errcode.Err) {
+	var replyGoodInfo []reply.RepGoodInfo
+	Qgood := query.NewGood()
+	goodsInfo, err := Qgood.BatchGetGood(ids)
+	if err != nil {
+		return replyGoodInfo, errcode.ErrServer.WithDetails(err.Error())
+	}
+	for _, goodInfo := range goodsInfo {
+		t := Model2Response(goodInfo)
+		replyGoodInfo = append(replyGoodInfo, t)
+	}
+	return replyGoodInfo, nil
+}

@@ -14,3 +14,7 @@ var (
 	ErrNotManager = NewErr(30001, "鉴权失败,权限不足")
 	ErrNotLogin   = NewErr(30002, "鉴权失败,请先登录")
 )
+
+var (
+	ErrRedis = NewErr(40001, "redis内部错误")
+)

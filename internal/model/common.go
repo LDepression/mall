@@ -17,8 +17,9 @@ type BaseModel struct {
 	CreatedAt time.Time      `gorm:"column:add_time"`
 	UpdatedAt time.Time      `gorm:"column:update_time"`
 	DeletedAt gorm.DeletedAt `gorm:"column:delete_time"`
-	IsDelete  bool           `gorm:"column:is_delete"`
+	IsDelete  bool           `gorm:"column:is_deleted"`
 }
+type GormList []string
 
 func (g GormList) Value() (driver.Value, error) {
 	return json.Marshal(g)

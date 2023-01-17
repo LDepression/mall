@@ -1,13 +1,13 @@
 package dao
 
 import (
-	"github.com/go-redis/redis/v8"
 	"gorm.io/gorm"
+	"mall/internal/dao/redis/query"
 )
 
 type group struct {
 	DB    *gorm.DB
-	Redis *redis.Client
+	Redis *query.Queries
 }
 
 var Group = new(group)
