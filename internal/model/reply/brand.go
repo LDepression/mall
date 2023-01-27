@@ -5,3 +5,7 @@ type ReqBrandInfo struct {
 	Name string `json:"Name"`
 	Logo string `json:"Logo"`
 }
+type RepBrandsList struct {
+	BrandsInfo []ReqBrandInfo `json:"BrandsInfo"`
+	Total      int32          `json:"Total"`
+}

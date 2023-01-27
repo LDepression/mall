@@ -29,7 +29,6 @@ func (va) InitTrans(locale string) (err error) {
 			}
 			return name
 		})
-
 		zhT := zh.New() //中文翻译器
 		enT := en.New() //英文翻译器
 		//第一个参数是备用的语言环境，后面的参数是应该支持的语言环境

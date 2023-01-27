@@ -65,7 +65,7 @@ func Mysql2Es() {
 		panic(err)
 	}
 	//初始化连接
-	host := "http://192.168.28.100:9200"
+	host := "http://192.168.28.3:9200"
 	logger1 := log.New(os.Stdout, "mall", log.LstdFlags)
 
 	global.EsClient, err = elastic.NewClient(elastic.SetURL(host), elastic.SetSniff(false), elastic.SetTraceLog(logger1))
