@@ -16,12 +16,14 @@ func (user) Init(ctx *gin.RouterGroup) {
 	group := ctx.Group("/u")
 	auth1 := group.Use(middleware.Auth())
 	auth2 := group.Use(middleware.ManagerAuth(), middleware.Auth())
-	auth1.GET("/:id", user.GetUserByID)
-	auth1.POST("/userInfo", user.UpdateUserInfo)
-	auth1.POST("/updateEmail", user.UpdateEmail)
-	auth1.POST("/modifyPassword", user.ModifyPassword)
-	auth2.POST("/refresh", user.RefreshToken)
-	auth2.GET("/list", user.GetUsers)
-	auth2.DELETE("/delete", user.Delete)
-	auth1.POST("/searchUserByName", user.SearchUsers)
+	{
+		auth1.GET("/:id", user.GetUserByID)
+		auth1.POST("/userInfo", user.UpdateUserInfo)
+		auth1.POST("/updateEmail", user.UpdateEmail)
+		auth1.POST("/modifyPassword", user.ModifyPassword)
+		auth2.POST("/refresh", user.RefreshToken)
+		auth2.GET("/list", user.GetUsers)
+		auth2.DELETE("/delete", user.Delete)
+		auth1.POST("/searchUserByName", user.SearchUsers)
+	}
 }

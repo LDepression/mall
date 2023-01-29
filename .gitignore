@@ -1,3 +1,4 @@
 *.exe
 storage/
 .idea
+tmp

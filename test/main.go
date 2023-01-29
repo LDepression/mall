@@ -10,7 +10,7 @@ import (
 
 func main() {
 	//初始化连接
-	host := fmt.Sprintf("http://%s:%d", "192.168.28.100", 9200)
+	host := fmt.Sprintf("http://%s:%d", "192.168.28.6", 9200)
 	logger := log.New(os.Stdout, "mall", log.LstdFlags)
 	var err error
 	client, err := elastic.NewClient(elastic.SetURL(host), elastic.SetSniff(false),

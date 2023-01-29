@@ -61,5 +61,5 @@ Auto:
   SendEmailTime: 60s
   CodeValidTime: 1h
 EsInfo:
-  Host: "192.168.28.3"
+  Host: "192.168.28.6"
   Port: 9200

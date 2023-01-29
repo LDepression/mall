@@ -35,6 +35,6 @@ func Init() *gorm.DB {
 	if err != nil {
 		panic(err)
 	}
-	DB.AutoMigrate(&model.User{}, &model.Good{}, &model.Category{}, &model.Brand{}, &model.GoodsCategoryBrand{})
+	_ = DB.AutoMigrate(&model.User{}, &model.Good{}, &model.Category{}, &model.Brand{}, &model.GoodsCategoryBrand{})
 	return DB
 }

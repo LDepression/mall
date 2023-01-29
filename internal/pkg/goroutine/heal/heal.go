@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	"ttms/internal/pkg/goroutine/pattern"
+	"mall/internal/pkg/goroutine/pattern"
 )
 
 /*

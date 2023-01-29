@@ -72,7 +72,7 @@ func gracefulExit(s *http.Server) {
 	// 等待退出通知
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
-	log.Println("shutdone....")
+	log.Println("shutDone....")
 	// 给几秒完成剩余任务
 	ctx, cancel := context.WithTimeout(context.Background(), global.Setting.Serve.DefaultTimeout)
 	defer cancel()
