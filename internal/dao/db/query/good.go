@@ -57,7 +57,7 @@ func (g good) GetGoodByID(id int32) (*model.Good, error) {
 	}
 }
 
-func (g good) BatchGetGood(ids []int) ([]model.Good, error) {
+func (g good) BatchGetGood(ids []int32) ([]model.Good, error) {
 	var goods []model.Good
 	if result := dao.Group.DB.Find(&goods, ids); result.RowsAffected == 0 {
 		return goods, result.Error

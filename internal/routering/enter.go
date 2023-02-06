@@ -8,6 +8,8 @@ type group struct {
 	Good     good
 	Category category
 	Brand    brand
+	ShopCart shopCart
+	Order    order
 }
 
 var Group = new(group)

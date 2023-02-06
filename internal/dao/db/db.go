@@ -35,6 +35,13 @@ func Init() *gorm.DB {
 	if err != nil {
 		panic(err)
 	}
-	_ = DB.AutoMigrate(&model.User{}, &model.Good{}, &model.Category{}, &model.Brand{}, &model.GoodsCategoryBrand{})
+	_ = DB.AutoMigrate(&model.ShoppingCart{}, &model.OrderInfo{}, &model.OrderGoods{})
+	//for i := 421; i <= 600; i++ {
+	//	var inv model.Inventory
+	//	inv.Goods = int32(i)
+	//	inv.Stocks = 100
+	//	inv.Version = 0
+	//	DB.Create(&inv)
+	//}
 	return DB
 }

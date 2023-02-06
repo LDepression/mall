@@ -21,5 +21,7 @@ func NewRouter() *gin.Engine {
 	routering.Group.Good.Init(root)
 	routering.Group.Category.Init(root)
 	routering.Group.Brand.Init(root)
+	routering.Group.ShopCart.Init(root)
+	routering.Group.Order.Init(root)
 	return r
 }

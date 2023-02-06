@@ -288,7 +288,7 @@ func (g *good) GetGoodByID(ctx *gin.Context, id int32) (*reply.RepGoodInfo, errc
 	return &reply1, nil
 }
 
-func (g *good) BatchGetGoods(ids []int) ([]reply.RepGoodInfo, errcode.Err) {
+func (g *good) BatchGetGoods(ids []int32) ([]reply.RepGoodInfo, errcode.Err) {
 	var replyGoodInfo []reply.RepGoodInfo
 	Qgood := query.NewGood()
 	goodsInfo, err := Qgood.BatchGetGood(ids)
