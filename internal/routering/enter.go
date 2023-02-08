@@ -10,6 +10,7 @@ type group struct {
 	Brand    brand
 	ShopCart shopCart
 	Order    order
+	AliPay   alipay
 }
 
 var Group = new(group)

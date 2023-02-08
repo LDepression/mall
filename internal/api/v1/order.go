@@ -3,12 +3,15 @@ package v1
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/smartwalle/alipay/v3"
 	"go.uber.org/zap"
 	"mall/internal/api/base"
 	"mall/internal/form"
+	"mall/internal/global"
 	"mall/internal/logic"
 	"mall/internal/middleware"
 	"mall/internal/pkg/app"
+	"mall/internal/pkg/app/errcode"
 	"strconv"
 )
 
@@ -61,9 +64,39 @@ func (o *order) Create(ctx *gin.Context) {
 		rly.Reply(err)
 		return
 	}
+
+	//todo 支付宝的支付连接
+	client, err1 := alipay.New(global.Setting.AliPay.AppID, global.Setting.AliPay.PrivateKey, global.Setting.AliPay.IsProduction)
+	if err1 != nil {
+		zap.S().Info("实例化支付宝失败")
+		rly.Reply(errcode.ErrServer.WithDetails(err1.Error()))
+		return
+	}
+	err1 = client.LoadAliPayPublicKey(global.Setting.AliPay.AliPublicKey)
+	if err1 != nil {
+		zap.S().Info("加载支付宝公钥失败失败")
+		rly.Reply(errcode.ErrServer.WithDetails(err1.Error()))
+		return
+	}
+	var p = alipay.TradePagePay{}
+	p.NotifyURL = global.Setting.AliPay.NotifyURL
+	p.ReturnURL = global.Setting.AliPay.ReturnURL
+	p.Subject = "mall" + rsp.OrderSn
+	p.OutTradeNo = rsp.OrderSn
+	p.TotalAmount = strconv.FormatFloat(float64(rsp.Total), 'f', 2, 64)
+	p.ProductCode = global.Setting.AliPay.ProductCode
+	url, err1 := client.TradePagePay(p)
+	if err1 != nil {
+		zap.S().Info("生成支付url失败")
+
+		rly.Reply(errcode.ErrServer.WithDetails(err1.Error()))
+		return
+	}
+
 	reMap := make(map[string]interface{})
 	reMap["order_sn"] = rsp.OrderSn
 	reMap["user_id"] = rsp.UserId
+	reMap["alipay_url"] = url.String()
 	rly.Reply(nil, reMap)
 }
 func (o *order) Details(ctx *gin.Context) {
@@ -87,7 +120,31 @@ func (o *order) Details(ctx *gin.Context) {
 		rly.Reply(err)
 		return
 	}
-
+	client, err1 := alipay.New(global.Setting.AliPay.AppID, global.Setting.AliPay.PrivateKey, global.Setting.AliPay.IsProduction)
+	if err1 != nil {
+		zap.S().Info("实例化支付宝失败")
+		rly.Reply(errcode.ErrServer.WithDetails(err1.Error()))
+		return
+	}
+	err1 = client.LoadAliPayPublicKey(global.Setting.AliPay.AliPublicKey)
+	if err1 != nil {
+		zap.S().Info("加载支付宝公钥失败失败")
+		rly.Reply(errcode.ErrServer.WithDetails(err1.Error()))
+		return
+	}
+	var p = alipay.TradePagePay{}
+	p.NotifyURL = global.Setting.AliPay.NotifyURL
+	p.ReturnURL = global.Setting.AliPay.ReturnURL
+	p.Subject = "mall" + orderDetails.OrderData.OrderSn
+	p.OutTradeNo = orderDetails.OrderData.OrderSn
+	p.TotalAmount = strconv.FormatFloat(float64(orderDetails.OrderData.Total), 'f', 2, 64)
+	p.ProductCode = global.Setting.AliPay.ProductCode
+	url, err1 := client.TradePagePay(p)
+	if err1 != nil {
+		zap.S().Info("生成支付url失败")
+		rly.Reply(errcode.ErrServer.WithDetails(err1.Error()))
+		return
+	}
 	reMap := make(map[string]map[string]interface{})
 	for i, orderDetail := range orderDetails.GoodData {
 		reMap[fmt.Sprintf("good_data%d", i+1)] = make(map[string]interface{})
@@ -104,6 +161,7 @@ func (o *order) Details(ctx *gin.Context) {
 	reMap["order_data"]["name"] = orderDetails.OrderData.Name
 	reMap["order_data"]["post"] = orderDetails.OrderData.Post
 	reMap["order_data"]["user_id"] = orderDetails.OrderData.UserId
+	reMap["order_data"]["alipay_url"] = url.String()
 	rly.Reply(nil, reMap)
 }
 func (o *order) Update(ctx *gin.Context) {

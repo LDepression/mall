@@ -23,5 +23,6 @@ func NewRouter() *gin.Engine {
 	routering.Group.Brand.Init(root)
 	routering.Group.ShopCart.Init(root)
 	routering.Group.Order.Init(root)
+	routering.Group.AliPay.Init(root)
 	return r
 }

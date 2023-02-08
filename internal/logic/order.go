@@ -136,7 +136,7 @@ func (o *order) CreateOrder(req form.OrderRequest) (*reply.OrderInfoResponse, er
 		return nil, errcode.ErrServer.WithDetails("生成订单失败")
 	}
 	tx.Commit()
-	return &reply.OrderInfoResponse{OrderSn: order.OrderSn, UserId: req.UserID}, nil
+	return &reply.OrderInfoResponse{OrderSn: order.OrderSn, UserId: req.UserID, Total: totalPrice}, nil
 }
 func (o *order) OrderDetails(req form.OrderRequest) (*reply.OrderDetailsResponse, errcode.Err) {
 	rep := &reply.OrderDetailsResponse{}

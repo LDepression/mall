@@ -14,6 +14,7 @@ type All struct {
 	OSS      OSS      `mapstructure:"OSS"`
 	Auto     Auto     `mapstructure:"Auto"`
 	EsInfo   EsInfo   `mapstructure:"EsInfo"`
+	AliPay   AliPay   `mapstructure:"AliPay"`
 }
 type Serve struct {
 	Addr           string        `mapstructure:"addr" json:"addr"`
@@ -101,4 +102,14 @@ type Auto struct {
 type EsInfo struct {
 	Host string `mapstructure:"Host"`
 	Port int    `mapstructure:"Port"`
+}
+
+type AliPay struct {
+	AppID        string `mapstructure:"AppID"`
+	PrivateKey   string `mapstructure:"PrivateKey"`
+	AliPublicKey string `mapstrvcucture:"AliPublicKey"`
+	NotifyURL    string `mapstructure:"NotifyURL"`
+	ReturnURL    string `mapstructure:"ReturnURL"`
+	ProductCode  string `mapstructure:"ProductCode"`
+	IsProduction bool   `mapstructure:"IsProduction"`
 }

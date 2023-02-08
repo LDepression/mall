@@ -63,3 +63,11 @@ Auto:
 EsInfo:
   Host: "192.168.28.11"
   Port: 9200
+Alipay:
+  AppID: "2021000122617027"
+  PrivateKey: ""
+  AliPublicKey: ""
+  NotifyURL: http://***/api/v1/pay/alipay/notify
+  ReturnURL: "http://127.0.0.1:8090/return"
+  ProductCode: "FAST_INSTANT_TRADE_PAY"
+  IsProduction: false
