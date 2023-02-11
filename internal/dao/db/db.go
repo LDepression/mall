@@ -2,15 +2,16 @@ package db
 
 import (
 	"fmt"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
-	"gorm.io/gorm/schema"
 	"log"
 	"mall/internal/global"
 	"mall/internal/model"
 	"os"
 	"time"
+
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
+	"gorm.io/gorm/schema"
 )
 
 func Init() *gorm.DB {
@@ -35,7 +36,7 @@ func Init() *gorm.DB {
 	if err != nil {
 		panic(err)
 	}
-	_ = DB.AutoMigrate(&model.ShoppingCart{}, &model.OrderInfo{}, &model.OrderGoods{})
+	_ = DB.AutoMigrate(&model.RebackDetails{})
 	//for i := 421; i <= 600; i++ {
 	//	var inv model.Inventory
 	//	inv.Goods = int32(i)
@@ -43,5 +44,23 @@ func Init() *gorm.DB {
 	//	inv.Version = 0
 	//	DB.Create(&inv)
 	//}
+	/*
+		DB.Create(&model.RebackDetails{
+			GoodsInfo: []model.GoodInfo{
+				{GoodID: 421, Num: 2},
+				{GoodID: 422, Num: 2},
+			},
+			OrderSn: "lyc",
+			Status:  1,
+		})
+
+	*/
+
+	/*
+		var reback model.RebackDetails
+		DB.Where(&model.RebackDetails{OrderSn: "lyc"}).First(&reback)
+		fmt.Println(reback)
+
+	*/
 	return DB
 }

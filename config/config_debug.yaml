@@ -61,13 +61,13 @@ Auto:
   SendEmailTime: 60s
   CodeValidTime: 1h
 EsInfo:
-  Host: "192.168.28.11"
+  Host: "192.168.28.15"
   Port: 9200
 Alipay:
   AppID: "2021000122617027"
-  PrivateKey: ""
-  AliPublicKey: ""
-  NotifyURL: http://***/api/v1/pay/alipay/notify
+  PrivateKey: "***"
+  AliPublicKey: "***"
+  NotifyURL: http://yyy.freehk.svipss.top/api/v1/pay/alipay/notify
   ReturnURL: "http://127.0.0.1:8090/return"
   ProductCode: "FAST_INSTANT_TRADE_PAY"
   IsProduction: false

@@ -4,17 +4,18 @@ import (
 	"context"
 	"crypto/md5"
 	"encoding/hex"
-	"github.com/olivere/elastic/v7"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
-	"gorm.io/gorm/utils"
 	"io"
 	"log"
 	"mall/internal/global"
 	"mall/internal/model"
 	"os"
 	"time"
+
+	"github.com/olivere/elastic/v7"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
+	"gorm.io/gorm/utils"
 )
 
 func genMd5(code string) string {
@@ -65,7 +66,7 @@ func Mysql2Es() {
 		panic(err)
 	}
 	//初始化连接
-	host := "http://192.168.28.3:9200"
+	host := "http://192.168.28.13:9200"
 	logger1 := log.New(os.Stdout, "mall", log.LstdFlags)
 
 	global.EsClient, err = elastic.NewClient(elastic.SetURL(host), elastic.SetSniff(false), elastic.SetTraceLog(logger1))

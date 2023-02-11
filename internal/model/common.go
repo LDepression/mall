@@ -3,9 +3,10 @@ package model
 import (
 	"database/sql/driver"
 	"encoding/json"
-	"gorm.io/gorm"
 	"mall/internal/pkg/token"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type PalLoad struct {

@@ -1,11 +1,3 @@
-/**
- * @Author: lenovo
- * @Description:
- * @File:  main.go
- * @Version: 1.0.0
- * @Date: 2023/02/11 15:25
- */
-
 package main
 
 import (
@@ -91,16 +83,11 @@ func main() {
 	//_ = c1.Start()
 	//_ = c1.Shutdown()
 	// 退出通知
-	gracefulExit(s)
-}
-
-// 优雅退出
-func gracefulExit(s *http.Server) {
-	// 退出通知
 	quit := make(chan os.Signal, 1)
 	// 等待退出通知
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
+	//_ = c.Shutdown()
 	log.Println("shutDone....")
 	// 给几秒完成剩余任务
 	ctx, cancel := context.WithTimeout(context.Background(), global.Setting.Serve.DefaultTimeout)
@@ -109,3 +96,19 @@ func gracefulExit(s *http.Server) {
 		log.Println("Server forced to ShutDown,Err:" + err.Error())
 	}
 }
+
+// 优雅退出
+//func gracefulExit(s *http.Server) {
+//	// 退出通知
+//	quit := make(chan os.Signal, 1)
+//	// 等待退出通知
+//	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+//	<-quit
+//	log.Println("shutDone....")
+//	// 给几秒完成剩余任务
+//	ctx, cancel := context.WithTimeout(context.Background(), global.Setting.Serve.DefaultTimeout)
+//	defer cancel()
+//	if err := s.Shutdown(ctx); err != nil { // 优雅退出
+//		log.Println("Server forced to ShutDown,Err:" + err.Error())
+//	}
+//}

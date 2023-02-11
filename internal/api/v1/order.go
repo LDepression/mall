@@ -2,9 +2,6 @@ package v1
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/smartwalle/alipay/v3"
-	"go.uber.org/zap"
 	"mall/internal/api/base"
 	"mall/internal/form"
 	"mall/internal/global"
@@ -13,6 +10,10 @@ import (
 	"mall/internal/pkg/app"
 	"mall/internal/pkg/app/errcode"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
+	"github.com/smartwalle/alipay/v3"
+	"go.uber.org/zap"
 )
 
 type order struct {
@@ -64,8 +65,6 @@ func (o *order) Create(ctx *gin.Context) {
 		rly.Reply(err)
 		return
 	}
-
-	//todo 支付宝的支付连接
 	client, err1 := alipay.New(global.Setting.AliPay.AppID, global.Setting.AliPay.PrivateKey, global.Setting.AliPay.IsProduction)
 	if err1 != nil {
 		zap.S().Info("实例化支付宝失败")
@@ -98,6 +97,7 @@ func (o *order) Create(ctx *gin.Context) {
 	reMap["user_id"] = rsp.UserId
 	reMap["alipay_url"] = url.String()
 	rly.Reply(nil, reMap)
+	return
 }
 func (o *order) Details(ctx *gin.Context) {
 	rly := app.NewResponse(ctx)
