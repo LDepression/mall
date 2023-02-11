@@ -64,7 +64,7 @@ EsInfo:
   Host: "192.168.28.15"
   Port: 9200
 Alipay:
-  AppID: "2021000122617027"
+  AppID: "***"
   PrivateKey: "***"
   AliPublicKey: "***"
   NotifyURL: http://yyy.freehk.svipss.top/api/v1/pay/alipay/notify
