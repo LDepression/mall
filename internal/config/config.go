@@ -15,7 +15,32 @@ type All struct {
 	Auto     Auto     `mapstructure:"Auto"`
 	EsInfo   EsInfo   `mapstructure:"EsInfo"`
 	AliPay   AliPay   `mapstructure:"AliPay"`
+	Limit    Limit    `mapstructure:"Limit"`
 }
+
+type Limit struct {
+	IPLimit  IPLimit  `yaml:"IPLimit"`
+	APILimit APILimit `yaml:"APILimit"`
+}
+
+type IPLimit struct {
+	Cap     int64 `yaml:"Cap"`
+	GenNum  int64 `yaml:"GenNum"`
+	GenTime int64 `yaml:"GenTime"`
+	Cost    int64 `yaml:"Cost"`
+}
+
+type APILimit struct {
+	Upload []Bucket `yaml:"Upload"`
+	Email  []Bucket `yaml:"Email"`
+}
+
+type Bucket struct {
+	Count    int           `yaml:"Count"`
+	Duration time.Duration `yaml:"Duration"`
+	Burst    int           `yaml:"Burst"`
+}
+
 type Serve struct {
 	Addr           string        `mapstructure:"addr" json:"addr"`
 	ReadTimeout    time.Duration `mapstructure:"readTimeout" json:"readTimeout"`

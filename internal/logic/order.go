@@ -114,14 +114,14 @@ func (l *orderListener) ExecuteLocalTransaction(msg *primitive.Message) primitiv
 		return primitive.CommitMessageState
 	}
 	//发送延时消息
-	p, err := rocketmq.NewProducer(producer.WithNameServer([]string{"192.168.28.15:9876"}), producer.WithInstanceName("lyc"))
+	p, err := rocketmq.NewProducer(producer.WithNameServer([]string{"192.168.28.16:9876"}), producer.WithInstanceName("lyc"))
 	if err != nil {
 		panic("生成producer失败")
 	}
 	if err = p.Start(); err != nil {
 		panic(err)
 	}
-	msg = primitive.NewMessage("order_timeout", msg.Body)
+	msg = primitive.NewMessage("orderTimeout", msg.Body)
 	msg.WithDelayTimeLevel(2)
 	_, err = p.SendSync(context.Background(), msg)
 	if err != nil {
@@ -196,7 +196,7 @@ func (o *order) CreateOrder(req form.OrderRequest) (*reply.OrderInfoResponse, er
 	var listener orderListener
 	p, err := rocketmq.NewTransactionProducer(
 		&listener,
-		producer.WithNameServer([]string{"192.168.28.15:9876"}),
+		producer.WithNameServer([]string{"192.168.28.16:9876"}),
 		producer.WithInstanceName("kinase"),
 	)
 	if err != nil {
@@ -290,7 +290,7 @@ func OrderTimeout(ctx context.Context, msgs ...*primitive.MessageExt) (consumer.
 		if order.Status != "TRADE_SUCCESS" {
 
 			//模拟向order_back发送消息
-			p, err := rocketmq.NewProducer(producer.WithNameServer([]string{"192.168.28.15:9876"}), producer.WithInstanceName("yyy"))
+			p, err := rocketmq.NewProducer(producer.WithNameServer([]string{"192.168.28.16:9876"}), producer.WithGroupName("lyc"), producer.WithInstanceName("yyy"))
 			if err != nil {
 				panic("生成producer失败")
 			}

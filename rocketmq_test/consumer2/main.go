@@ -27,10 +27,10 @@ import (
 
 func main() {
 	c, _ := rocketmq.NewPushConsumer(
-		consumer.WithNameServer([]string{"192.168.28.15:9876"}),
-		consumer.WithGroupName("mall-timeout"),
+		consumer.WithNameServer([]string{"192.168.28.16:9876"}),
+		consumer.WithGroupName("mall-timeout11"),
 	)
-	if err := c.Subscribe("order_timeout", consumer.MessageSelector{}, logic.OrderTimeout); err != nil {
+	if err := c.Subscribe("orderTimeout", consumer.MessageSelector{}, logic.OrderTimeout); err != nil {
 		fmt.Println("读取消息失败")
 	}
 	_ = c.Start()

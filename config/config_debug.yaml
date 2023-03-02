@@ -10,8 +10,8 @@ mysql:
   port: 3306
   dbname: "mall"
 redis:
-  addr: "127.0.0.1:6379"
-  password: "123456"
+  addr: "192.168.28.16:6379"
+  password: ""
   poolSize: 20
   CacheTime: 1h
 SMTPInfo:
@@ -40,6 +40,24 @@ Captcha:
   maxSkew: 0.7
   dotCount: 80
   expired: 30 #过期时间
+Limit:
+  IPLimit: # IP限流
+    Cap: 10           # 令牌桶容量
+    GenNum: 5         # 令牌产生数
+    GenTime: 1       # 令牌产生时间
+    Cost: 1           # 本次取走的令牌数
+  APILimit: # API限流
+    Email:
+      - Count: 5
+        Duration: 1s
+        Burst: 5
+      - Count: 30
+        Duration: 1m
+        Burst: 5
+    Upload:
+      - Count: 1
+        Duration: 1s
+        Burst: 1
 Worker: # 工作池配置
   TaskChanCapacity: 50 # 任务队列容量
   WorkerChanCapacity: 50 # 工作队列容量
@@ -52,8 +70,8 @@ Token:
   AuthKey: "Claims"
 OSS:
   Endpoint: "http://oss-cn-hangzhou.aliyuncs.com"
-  AccessKeyId: "***"
-  AccessKeySecret: "***"
+  AccessKeyId: "LTAI5t5geL57b9nZyXcyH3pW"
+  AccessKeySecret: "w6FpPuAiuPCv1d9Ij3KB0QCmOlw1my"
   BucketName: "lycmall2"
   BasePath: "mall"
   BucketUrl: "http://lycmall2.oss-cn-hangzhou.aliyuncs.com"
@@ -61,10 +79,10 @@ Auto:
   SendEmailTime: 60s
   CodeValidTime: 1h
 EsInfo:
-  Host: "192.168.28.15"
+  Host: "192.168.28.16"
   Port: 9200
 Alipay:
-  AppID: "***"
+  AppID: "2021000122617027"
   PrivateKey: "***"
   AliPublicKey: "***"
   NotifyURL: http://yyy.freehk.svipss.top/api/v1/pay/alipay/notify

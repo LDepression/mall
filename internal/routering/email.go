@@ -1,13 +1,17 @@
 package routering
 
 import (
-	"github.com/gin-gonic/gin"
 	v1 "mall/internal/api/v1"
+	"mall/internal/global"
+	"mall/internal/middleware"
+
+	"github.com/gin-gonic/gin"
 )
 
 type email struct {
 }
 
 func (email) Init(ctx *gin.RouterGroup) {
-	ctx.POST("/sendEmail", v1.SendEmailCode)
+	email := ctx.Group("email", middleware.LimitAPI(GetLimiters(global.Setting.Limit.APILimit.Email)))
+	email.POST("/sendEmail", v1.SendEmailCode)
 }

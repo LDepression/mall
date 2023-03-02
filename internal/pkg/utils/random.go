@@ -48,45 +48,8 @@ func RandomStringSlice(maxLength int, eleMaxLength int) []string {
 	return ret
 }
 
-var (
-	pictures = []string{"http://humraja.xyz/picture/wallhaven-13pv13.jpg", "http://humraja.xyz/picture/wallhaven-6ozkzl.jpg", "http://humraja.xyz/picture/wallhaven-dp3ogo.jpg", "http://humraja.xyz/picture/wallhaven-q2ep7l.jpg"}
-)
-
-func RandomAvatar() string {
-	return pictures[rand.Intn(len(pictures))]
-}
-
 func RandomEmail() string {
 	return RandomString(10) + "@" + RandomString(rand.Intn(2)+2) + ".com"
-}
-
-var areas = []string{"大陆",
-	"美国",
-	"韩国",
-	"日本",
-	"中国香港",
-	"中国台湾",
-	"泰国",
-	"印度",
-	"法国",
-	"英国",
-	"俄罗斯",
-	"意大利",
-	"西班牙",
-	"德国",
-	"波兰",
-	"澳大利亚",
-	"伊朗",
-	"其他"}
-
-func RandomArea() string {
-	return areas[rand.Intn(len(areas))]
-}
-
-var tags = []string{"爱情", "喜剧", "动画", "剧情", "恐怖", "惊悚", "科幻", "动作", "悬疑", "犯罪", "冒险", "战争", "奇幻", "运动", "家庭", "古装", "武侠", "西部", "历史", "传记", "歌舞", "黑色电影", "短片", "纪录片", "戏曲", "音乐", "灾难", "青春", "儿童", "其他"}
-
-func RandomTag() string {
-	return tags[rand.Intn(len(tags))]
 }
 
 /*

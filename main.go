@@ -72,7 +72,7 @@ func main() {
 		}
 	}()
 	//c, _ := rocketmq.NewPushConsumer(
-	//	consumer.WithNameServer([]string{"192.168.28.15:9876"}),
+	//	consumer.WithNameServer([]string{"192.168.28.16:9876"}),
 	//	consumer.WithGroupName("mall-reback"),
 	//)
 	//if err := c.Subscribe("order_back", consumer.MessageSelector{}, logic.AutoReback); err != nil {
@@ -80,9 +80,9 @@ func main() {
 	//}
 	//_ = c.Start()
 	//time.Sleep(time.Hour) //不能让主携程退出
-
+	//
 	//c1, _ := rocketmq.NewPushConsumer(
-	//	consumer.WithNameServer([]string{"192.168.28.15:9876"}),
+	//	consumer.WithNameServer([]string{"192.168.28.16:9876"}),
 	//	consumer.WithGroupName("mall-timeout"),
 	//)
 	//if err := c1.Subscribe("order_timeout", consumer.MessageSelector{}, logic.OrderTimeout); err != nil {
