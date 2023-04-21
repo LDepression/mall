@@ -1,0 +1,75 @@
+# yaml 配置
+version: "3.7"
+services:
+  redis704:
+    image: "redis:7.0.4"
+    ports:
+      - "26379:6379"  # 外部端口:内部端口
+    networks:
+      - lyc_mall
+  mysql8029:
+    image: "mysql:8.0.29"
+    ports:
+      - "33061:3306"
+    command: "--default-authentication-plugin=mysql_native_password --init-file /data/application/init.sql"  # 初始化命令
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "mall"
+      MYSQL_PASSWORD: "root"
+    volumes:
+      - ./init.sql:/data/application/init.sql
+    networks:
+      - lyc_mall
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.10.1
+    container_name: kibana
+    environment:
+      - I18N_LOCALE=zh-CN
+      - XPACK_GRAPH_ENABLED=true
+      - TIMELION_ENABLED=true
+      - XPACK_MONITORING_COLLECTION_ENABLED="true"
+    ports:
+      - 5601:5601
+    networks:
+      - lyc_mall
+
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
+    container_name: elasticsearch
+    environment:
+      - cluster.name=fanone
+      - node.name=es
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms64m -Xmx251m"
+      - discovery.seed_hosts=es
+      - cluster.initial_master_nodes=es
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - /usr/local/elasticsearch/data:/usr/local/elasticsearch/data
+      - /usr/local/elasticsearch/config/es/config:/usr/local/elasticsearch/config
+    ports:
+      - 9200:9200
+    restart: always
+    networks:
+      - lyc_mall
+  mall2:
+    build: .
+    volumes:
+      - ./wait-for-it.sh:/wait-for-it.sh
+    command: ["sh", "-c", "/wait-for-it.sh redis704:6379  mysql8029:3306  -- ./mall2 ./config/config_debug.yaml"]
+    depends_on:
+      - mysql8029
+      - redis704
+    ports:
+      - "8081:8081"
+    networks:
+      - lyc_mall
+networks:
+  lyc_mall:
+    external: 
+      name: lyc_mall

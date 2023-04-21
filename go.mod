@@ -29,10 +29,9 @@ require (
 
 require (
 	github.com/apache/rocketmq-client-go/v2 v2.1.1
+	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/juju/ratelimit v1.0.1
 	github.com/onsi/gomega v1.20.0 // indirect
-	github.com/robertkrimen/otto v0.2.1
-	github.com/yuin/gluamapper v0.0.0-20150323120927-d836955830e7
-	github.com/yuin/gopher-lua v1.1.0
 	golang.org/x/time v0.0.0-20220609170525-579cf78fd858
+	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 )

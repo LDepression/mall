@@ -10,8 +10,10 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"mall/internal/global"
+	"mall/internal/logic"
 	"mall/internal/model/common"
 	"mall/internal/routering/router"
 	"mall/internal/setting"
@@ -19,10 +21,14 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
+
+	"github.com/apache/rocketmq-client-go/v2"
+	"github.com/apache/rocketmq-client-go/v2/consumer"
 
 	"github.com/gin-gonic/gin/binding"
 	ut "github.com/go-playground/universal-translator"
-	"github.com/go-playground/validator/v10"
+	"github.com/go-playground/validator"
 )
 
 //go:generate go env -w GO111MODULE=on
@@ -38,6 +44,31 @@ func InitSetting() {
 func main() {
 	InitSetting()
 
+	go func() {
+		c, _ := rocketmq.NewPushConsumer(
+			consumer.WithNameServer([]string{"192.168.28.16:9876"}),
+			consumer.WithGroupName("mall-reback11"),
+		)
+		if err := c.Subscribe("order_back", consumer.MessageSelector{}, logic.AutoReback); err != nil {
+			fmt.Println("读取消息失败")
+		}
+		_ = c.Start()
+		time.Sleep(time.Hour) //不能让主携程退出
+		_ = c.Shutdown()
+	}()
+
+	go func() {
+		c, _ := rocketmq.NewPushConsumer(
+			consumer.WithNameServer([]string{"192.168.28.16:9876"}),
+			consumer.WithGroupName("mall-timeout11"),
+		)
+		if err := c.Subscribe("orderTimeout", consumer.MessageSelector{}, logic.OrderTimeout); err != nil {
+			fmt.Println("读取消息失败")
+		}
+		_ = c.Start()
+		time.Sleep(time.Hour) //不能让主携程退出
+		_ = c.Shutdown()
+	}()
 	//注册验证器
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		_ = v.RegisterValidation("mobile", common.ValidateMobile) //这里的mobile和from表单里的是一样的

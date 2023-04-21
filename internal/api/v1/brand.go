@@ -1,12 +1,13 @@
 package v1
 
 import (
-	"github.com/gin-gonic/gin"
 	"mall/internal/api/base"
 	"mall/internal/form"
 	"mall/internal/logic"
 	"mall/internal/pkg/app"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 type brand struct {
@@ -16,6 +17,16 @@ func NewBrand() *brand {
 	return &brand{}
 }
 
+// CreateBrand
+// @Tags      brand
+// @Summary   创建品牌
+// @Security  BasicAuth
+// @accept    application/json
+// @Produce   application/json
+// @Param     Authorization  header    string                true  "x-token 用户令牌"
+// @Param     data           body      form.CreateBrand  	 true  "影厅: 名称,logo"
+// @Success   200            {object}  common.State{}
+// @Router    /api/v1/cinema/create [post]
 func (*brand) CreateBrand(ctx *gin.Context) {
 	rly := app.NewResponse(ctx)
 	var createBrand form.CreateBrand

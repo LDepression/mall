@@ -2,8 +2,9 @@ package setting
 
 import (
 	"fmt"
-	"github.com/spf13/viper"
 	"mall/internal/global"
+
+	"github.com/spf13/viper"
 )
 
 func GetEnvInfo(env string) bool {
@@ -14,14 +15,15 @@ func GetEnvInfo(env string) bool {
 
 //这里是用viper将配置文件读取到
 func init() {
-	debug := GetEnvInfo("MXSHOP_DEBUG")
-	configPrefix := "config"
-	var configName string
-	if debug {
-		configName = fmt.Sprintf("%s_debug.yaml", configPrefix)
-	} else {
-		configName = fmt.Sprintf("%s_pro.yaml", configPrefix)
-	}
+	//debug := GetEnvInfo("MXSHOP_DEBUG")
+	//configPrefix := "config"
+	//var configName string
+	//if debug {
+	//	configName = fmt.Sprintf("%s_debug.yaml", configPrefix)
+	//} else {
+	//	configName = fmt.Sprintf("%s_pro.yaml", configPrefix)
+	//}
+	configName := "config_debug.yaml"
 	v := viper.New()
 	v.SetConfigFile(fmt.Sprintf("config/%s", configName))
 	err := v.ReadInConfig()

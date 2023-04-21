@@ -1,11 +1,12 @@
 package base
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
 	"mall/internal/global"
 	"net/http"
 	"strings"
+
+	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
 
 func RemoveTopStruct(fileds map[string]string) map[string]string {

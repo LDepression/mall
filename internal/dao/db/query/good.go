@@ -1,9 +1,10 @@
 package query
 
 import (
-	"gorm.io/gorm"
 	"mall/internal/dao"
 	"mall/internal/model"
+
+	"gorm.io/gorm"
 )
 
 type good struct {

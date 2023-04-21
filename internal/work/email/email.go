@@ -35,8 +35,8 @@ func NewBind() *Bind {
 	}
 }
 
-var mask = NewMaskEmail()
-var bind = NewBind()
+var mask = NewMaskEmail() //绑定邮箱
+var bind = NewBind()      //绑定用户
 
 type Result struct {
 	Code string
@@ -99,6 +99,7 @@ func (s *SendEmailCode) Task() func() {
 	}
 }
 
+//延时删除
 func (s *SendEmailCode) AfterDelete() {
 	time.AfterFunc(global.Setting.Auto.SendEmailTime, func() {
 		mask.RWMutex.RLock()

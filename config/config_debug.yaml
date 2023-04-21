@@ -5,12 +5,12 @@ serve:
   defaultTimeout: 30s #优雅退出时的默认时间
 mysql:
   user: "root"
-  password: "zxz123456"
-  host: "127.0.0.1"
+  password: "root"
+  host: "mysql8029"
   port: 3306
   dbname: "mall"
 redis:
-  addr: "192.168.28.16:6379"
+  addr: "redis704:6379"
   password: ""
   poolSize: 20
   CacheTime: 1h
@@ -70,8 +70,8 @@ Token:
   AuthKey: "Claims"
 OSS:
   Endpoint: "http://oss-cn-hangzhou.aliyuncs.com"
-  AccessKeyId: "LTAI5t5geL57b9nZyXcyH3pW"
-  AccessKeySecret: "w6FpPuAiuPCv1d9Ij3KB0QCmOlw1my"
+  AccessKeyId: "***"
+  AccessKeySecret: "***"
   BucketName: "lycmall2"
   BasePath: "mall"
   BucketUrl: "http://lycmall2.oss-cn-hangzhou.aliyuncs.com"
@@ -79,7 +79,7 @@ Auto:
   SendEmailTime: 60s
   CodeValidTime: 1h
 EsInfo:
-  Host: "192.168.28.16"
+  Host: "http://elasticsearch"
   Port: 9200
 Alipay:
   AppID: "2021000122617027"
